@@ -1,0 +1,37 @@
+services:
+  nats:
+    build:
+      context: ./nats
+    container_name: nats
+    ports:
+      - "4222:4222"
+    networks:
+      - app-network
+  api:
+    build:
+      context: ./api
+    container_name: api
+    environment:
+      - NATS_SERVER=nats://nats:4222
+      - SUBJECT=subject
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nats
+    networks:
+      - app-network
+  worker:
+    build:
+      context: ./worker
+    container_name: worker
+    environment:
+      - NATS_SERVER=nats://nats:4222
+      - SUBJECT=subject
+    depends_on:
+      - nats
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
