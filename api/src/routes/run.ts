@@ -5,8 +5,8 @@ const router = Router();
 
 router.get('/', async (req, res) => {
   const publisher = await Publisher.init();
-  publisher.publish('test', {test: 'test'});
-  res.send('run');
+  const result = await publisher.publish('test', {test: 'test'});
+  res.send(result);
 });
 
 export default router;

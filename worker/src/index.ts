@@ -13,6 +13,10 @@ import { Consumer } from './queue/Consumer';
 //     workerController.process(message);
 // });
 
-Consumer.init((msg) => {
-    console.log(msg)
+Consumer.init(async (msg) => {
+    console.log(msg);
+    // workerController.process(msg);
+    return {
+        result: 'test'
+    };
 });
