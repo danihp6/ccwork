@@ -3,9 +3,10 @@ import { Publisher } from '../queue/Publisher';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.put('/', async (req, res) => {
+  const { image } = req.body;
   const publisher = await Publisher.init();
-  const result = await publisher.publish('test', {test: 'test'});
+  const result = await publisher.publish(image, {test: 'test'});
   res.send(result);
 });
 

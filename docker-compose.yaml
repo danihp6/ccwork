@@ -14,10 +14,22 @@ services:
     environment:
       - NATS_SERVER=nats://nats:4222
       - SUBJECT=subject
+      - JWT_KEY=jwt-key
+      - JWT_SECRET=jwt-secret
     ports:
       - "3000:3000"
     depends_on:
       - nats
+    networks:
+      - app-network
+  proxy:
+    build:
+      context: ./proxy
+    container_name: proxy
+    ports:
+      - "9080:9080"
+    depends_on:
+      - api
     networks:
       - app-network
   worker:

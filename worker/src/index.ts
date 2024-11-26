@@ -15,8 +15,9 @@ import { Consumer } from './queue/Consumer';
 
 Consumer.init(async (msg) => {
     console.log(msg);
+    const { image } = msg;
     // workerController.process(msg);
     return {
-        result: 'test'
+        result: image
     };
 });

@@ -1,0 +1,35 @@
+routes:
+  - uri: /api/login
+    methods: ["POST"]
+    plugins:
+      proxy-rewrite:
+        uri: /login
+      basic-auth: {}
+    upstream:
+      type: roundrobin
+      nodes:
+        "api:3000": 1
+
+  - uri: /api/run
+    methods: ["PUT"]
+    plugins:
+      proxy-rewrite:
+        uri: /run
+      jwt-auth:
+        secret: jwt-secret
+    upstream:
+      type: roundrobin
+      nodes:
+        "api:3000": 1
+
+consumers:
+  - username: admin
+    plugins:
+      basic-auth:
+        username: admin
+        password: admin
+      jwt-auth:
+        key: jwt-key
+        secret: jwt-secret
+
+#END

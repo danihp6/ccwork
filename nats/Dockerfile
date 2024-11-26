@@ -1,4 +1,4 @@
-FROM nats:latest
+FROM nats:alpine
 
 COPY nats-config.conf /etc/nats-config.conf
 
