@@ -1,23 +1,23 @@
 import { NatsQueue } from './queue/NatsQueue';
 import { WorkerController } from './controller/WorkerController';
 import { QueueParameters } from './common/types';
-import { Consumer } from './queue/Consumer';
 
-// const natsQueue = new NatsQueue();
-// const workerController = new WorkerController();
+const SUBJECT = process.env.SUBJECT || 'subject';
 
-// const queueName = 'queue';
+const natsQueue = new NatsQueue();
+const workerController = new WorkerController();
 
-// // Subscribe to the queue and process messages using WorkerController
-// natsQueue.subscribe(queueName, (message: QueueParameters) => {
-//     workerController.process(message);
-// });
+async function initialize() {
+    // Check if the queue is connected
+    while (!natsQueue.isConnected()) {
+        console.log('Waiting for queue to connect...');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
 
-Consumer.init(async (msg) => {
-    console.log(msg);
-    const { image } = msg;
-    // workerController.process(msg);
-    return {
-        result: image
-    };
-});
+    // Subscribe to the queue and process messages using WorkerController
+    natsQueue.subscribe(SUBJECT, (message: QueueParameters) => {
+        workerController.process(message);
+    });
+}
+
+initialize();

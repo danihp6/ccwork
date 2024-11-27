@@ -3,21 +3,37 @@ import { connect, NatsConnection, StringCodec, Subscription } from 'nats';
 import { Queue } from './Queue';
 import { QueueParameters } from '../common/types';
 
+const NATS_SERVER = process.env.NATS_SERVER || 'nats://localhost:4222';
+
+
 export class NatsQueue implements Queue {
-    private nc!: NatsConnection;
+    private nc: NatsConnection | undefined;
     private sc = StringCodec();
     private subscriptions: Map<string, Subscription> = new Map();
 
     constructor() {
-        this.init();
+        this.init().catch((err) => {
+            console.error(`Error connecting to NATS: ${err.message}`);
+        });
     }
 
     private async init() {
-        this.nc = await connect({ servers: 'nats://localhost:4222' });
+        this.nc = await connect({ servers: NATS_SERVER });
         console.log('Connected to NATS');
     }
 
+    isConnected(): boolean {
+        return this.nc !== undefined;
+    }
+
     async subscribe(queueName: string, callback: (message: QueueParameters) => void): Promise<void> {
+        console.log(`Attempting to subscribe to ${queueName}`);
+        
+        if (!this.nc) {
+            console.error('Not connected to NATS');
+            return;
+        }
+
         if (this.subscriptions.has(queueName)) {
             console.log(`Already subscribed to ${queueName}`);
             return;
