@@ -16,10 +16,10 @@ export class Publisher {
     return new Publisher(nc);
   }
 
-  async publish(image: string, params: any) {
+  async publish(image: string, params: string) {
     const res = await this.nc.request(SUBJECT, sc.encode(JSON.stringify({
-      image,
-      params
+      dockerImage: image,
+      parameter: params,
     })));
     return res.json();
   }
