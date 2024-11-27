@@ -1,19 +1,25 @@
 {
 	"info": {
-		"_postman_id": "2e68bdc8-ef63-4364-8403-9788b42c3896",
+		"_postman_id": "f660e560-70b8-4320-bbc8-ce3173bd191d",
 		"name": "ccwork",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10479728"
+		"_exporter_id": "19180010"
 	},
 	"item": [
 		{
 			"name": "run",
 			"request": {
 				"method": "PUT",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{JWT_token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"image\": \"image\"\r\n}",
+					"raw": "{\r\n    \"image\": \"ubuntu\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -37,6 +43,19 @@
 		},
 		{
 			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.collectionVariables.set('JWT_token', response.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -69,6 +88,12 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "JWT_token",
+			"value": ""
 		}
 	]
 }
