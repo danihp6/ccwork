@@ -15,12 +15,12 @@ router.put('/', async (req, res) => {
 
   req.setTimeout(60000)
 
-  const { image } = req.body;
+  const { image, parameter } = req.body;
   
   const message: RunQueueParameters = {
     requestId: `${image}_${Date.now()}`,
     dockerImage: image,
-    parameter: 'hostname'
+    parameter: parameter
   }
 
   queue.publish(QUEUE_NAME, message).then((result) => {

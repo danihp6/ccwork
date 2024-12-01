@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"image\": \"ubuntu\"\r\n}",
+					"raw": "{\r\n    \"image\": \"ubuntu\",\r\n    \"parameter\": \"ls\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
