@@ -26,7 +26,7 @@ export class NatsQueue implements Queue {
         return this.nc !== undefined;
     }
 
-    async subscribe(queueName: string, callback: (message: RunQueueParameters) => void): Promise<void> {
+    async subscribe(queueName: string, callback: (message: ResponseQueueParameters) => void): Promise<void> {
         console.log(`Attempting to subscribe to ${queueName}`);
         
         if (!this.nc) {
@@ -46,7 +46,7 @@ export class NatsQueue implements Queue {
             for await (const msg of sub) {
                 try {
                     const message = this.sc.decode(msg.data);
-                    const queueMessage: RunQueueParameters = JSON.parse(message);
+                    const queueMessage: ResponseQueueParameters = JSON.parse(message);
                     callback(queueMessage);
                 } catch (err) {
                     if (err instanceof Error) {
@@ -74,7 +74,7 @@ export class NatsQueue implements Queue {
         }
     }
 
-    async publish(queueName: string, message: ResponseQueueParameters): Promise<void> {
+    async publish(queueName: string, message: RunQueueParameters): Promise<void> {
         if (!this.nc) {
             console.error('Not connected to NATS');
             return;
@@ -88,5 +88,5 @@ export class NatsQueue implements Queue {
         }).catch((err) => {
             console.error(`Error processing message: ${err.message}`);
         });
-    }
+      }
 }

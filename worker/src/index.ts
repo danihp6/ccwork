@@ -1,6 +1,6 @@
 import { NatsQueue } from './queue/NatsQueue';
 import { WorkerController } from './controller/WorkerController';
-import { QueueParameters } from './common/types';
+import { RunQueueParameters } from './common/types';
 
 const SUBJECT = process.env.SUBJECT || 'subject';
 
@@ -15,8 +15,15 @@ async function initialize() {
     }
 
     // Subscribe to the queue and process messages using WorkerController
-    natsQueue.subscribe(SUBJECT, (message: QueueParameters) => {
-        workerController.process(message);
+    natsQueue.subscribe(SUBJECT, (message: RunQueueParameters) => {
+        workerController.process(message).then((output) => {
+            natsQueue.publish(message.requestId, {
+                result: output,
+                status: 200,
+            });
+        }).catch((err) => {
+            console.error('Error processing message:', err);
+        });
     });
 }
 

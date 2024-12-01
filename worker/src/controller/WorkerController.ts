@@ -1,6 +1,6 @@
 import Docker from 'dockerode';
 
-import { QueueParameters } from '../common/types';
+import { RunQueueParameters } from '../common/types';
 
 export class WorkerController {
     private static instance: WorkerController;
@@ -17,7 +17,7 @@ export class WorkerController {
         return WorkerController.instance;
     }
 
-    public async process(message: QueueParameters): Promise<void> {
+    public async process(message: RunQueueParameters): Promise<string> {
         try {
             console.log('Processing message:', message);
 
@@ -47,10 +47,20 @@ export class WorkerController {
             const container = await this.docker.createContainer({
                 Image: message.dockerImage,
                 Entrypoint: [message.parameter],
+                Tty: false,
             });
 
             const stream = await container.attach({ stream: true, stdout: true, stderr: true });
-            stream.pipe(process.stdout);
+            // save the stream content so we can return it later
+            let output = '';
+            stream.on('data', (chunk) => {
+                output += chunk.toString();
+            });
+            stream.on('end', () => {
+                // remove \u0001\u0000\u0000\u0000\u0000\u0000\u0000\ from the start of the output
+                output = output.replace(/^\u0001\u0000\u0000\u0000\u0000\u0000\u0000/, '');
+                output = output.trim();
+            });
 
             await container.start();
             console.log(`Container ${container.id} started`);
@@ -64,8 +74,11 @@ export class WorkerController {
             // Remove the container
             await container.remove();
             console.log(`Container ${container.id} removed`);
+
+            return output;
         } catch (error) {
             console.error('Error running container:', error);
+            throw error;
         }
     }
 }
