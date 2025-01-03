@@ -1,14 +1,24 @@
 {
 	"info": {
-		"_postman_id": "f660e560-70b8-4320-bbc8-ce3173bd191d",
+		"_postman_id": "aee004be-016e-4a74-a679-535daa54f35d",
 		"name": "ccwork",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "19180010"
+		"_exporter_id": "10479728"
 	},
 	"item": [
 		{
 			"name": "run",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM1OTMwNTM1LCJleHAiOjE3MzU5MzQxMzV9.tSXsSQTRyvcGv_xkkteWdgeRvQwLb3JbLSL-MjjUD3Q",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [
 					{
@@ -61,13 +71,13 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "username",
-							"value": "admin",
+							"key": "password",
+							"value": "test",
 							"type": "string"
 						},
 						{
-							"key": "password",
-							"value": "admin",
+							"key": "username",
+							"value": "test",
 							"type": "string"
 						}
 					]
@@ -84,6 +94,128 @@
 					"path": [
 						"api",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM1OTMwNTM1LCJleHAiOjE3MzU5MzQxMzV9.tSXsSQTRyvcGv_xkkteWdgeRvQwLb3JbLSL-MjjUD3Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\": \"ubuntu\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "desregister",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM1OTI4OTI5LCJleHAiOjE3MzU5MzI1Mjl9.vdVspyO0mtVLdPaYfSkmvftKcZ25aQAY25nYKdsoEWk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\": \"ubuntu\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/desregister",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"desregister"
 					]
 				}
 			},

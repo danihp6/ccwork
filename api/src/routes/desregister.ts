@@ -16,7 +16,7 @@ router.post("/", getUserFromJWT, async (req, res) => {
     }
     res.status(200).json({ message: "Registro eliminado con éxito" });
   } catch (error) {
-    res.status(500).json({ message: "Error al eliminar el registro", error });
+    res.status(500).json({ message: "Error al eliminar el registro", error: JSON.stringify(error) });
   }
 });
 

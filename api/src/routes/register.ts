@@ -11,7 +11,7 @@ router.post("/", getUserFromJWT, async (req, res) => {
     await newFunction.save();
     res.status(201).json({ message: "Registro creado con éxito" });
   } catch (error) {
-    res.status(400).json({ message: "Error al crear el registro", error });
+    res.status(400).json({ message: "Error al crear el registro", error: JSON.stringify(error) });
   }
 });
 

@@ -1,22 +1,34 @@
 import { Router } from 'express';
 import { NatsQueue } from '../queue/NatsQueue';
 import { RunQueueParameters } from '../common/types';
+import Function from '../models/function';
+import { getUserFromJWT } from '../middlewares/GetUserFromJWT';
 
 const QUEUE_NAME = process.env.QUEUE_NAME || 'subject';
 const router = Router();
 
 const queue = new NatsQueue();
 
-router.put('/', async (req, res) => {
+router.put('/', getUserFromJWT, async (req, res) => {
   if (!queue.isConnected()) {
     res.status(503).json({ message: 'Service unavailable' });
     return;
   }
 
-  req.setTimeout(60000)
+  req.setTimeout(60000);
 
   const { image, parameter } = req.body;
-  
+
+  const result = await Function.find({
+    username: req.params.user,
+    image,
+  });
+
+  if (result.length === 0) {
+    res.status(404).json({ message: 'Function not found' });
+    return;
+  }
+
   const message: RunQueueParameters = {
     requestId: `${image}_${Date.now()}`,
     dockerImage: image,

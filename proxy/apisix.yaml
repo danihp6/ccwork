@@ -1,10 +1,19 @@
 routes:
+  - uri: /api/signup
+    methods: ["POST"]
+    plugins:
+      proxy-rewrite:
+        uri: /signup
+    upstream:
+      type: roundrobin
+      nodes:
+        "api:3000": 1
+
   - uri: /api/login
     methods: ["POST"]
     plugins:
       proxy-rewrite:
         uri: /login
-      basic-auth: {}
     upstream:
       type: roundrobin
       nodes:
@@ -22,12 +31,33 @@ routes:
       nodes:
         "api:3000": 1
 
+  - uri: /api/register
+    methods: ["POST"]
+    plugins:
+      proxy-rewrite:
+        uri: /register
+      jwt-auth:
+        secret: jwt-secret
+    upstream:
+      type: roundrobin
+      nodes:
+        "api:3000": 1
+
+  - uri: /api/desregister
+    methods: ["POST"]
+    plugins:
+      proxy-rewrite:
+        uri: /desregister
+      jwt-auth:
+        secret: jwt-secret
+    upstream:
+      type: roundrobin
+      nodes:
+        "api:3000": 1
+
 consumers:
   - username: admin
     plugins:
-      basic-auth:
-        username: admin
-        password: admin
       jwt-auth:
         key: jwt-key
         secret: jwt-secret

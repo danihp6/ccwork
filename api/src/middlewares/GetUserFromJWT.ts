@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { exit } from "process";
+
+const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret';
 
 // Middleware para verificar si el usuario existe
 export const getUserFromJWT = async (
@@ -15,8 +16,8 @@ export const getUserFromJWT = async (
     return;
   }
   try {
-    const decoded = jwt.verify(token, "your-secret-key");
-    req.params.user = decoded as string;
+    const decoded = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+    req.params.user = decoded.username;
     next();
   } catch (error) {
     res.status(401).json({ message: "Token inválido o expirado", error });
