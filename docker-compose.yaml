@@ -20,6 +20,7 @@ services:
       - "3000:3000"
     depends_on:
       - nats
+      - mongo
     networks:
       - app-network
   proxy:
@@ -43,6 +44,14 @@ services:
       - SUBJECT=subject
     depends_on:
       - nats
+    networks:
+      - app-network
+  mongo:
+    build:
+      context: ./db
+    container_name: mongodb
+    ports:
+      - "27017:27017"
     networks:
       - app-network
 
