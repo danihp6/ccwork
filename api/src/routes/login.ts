@@ -5,14 +5,12 @@ import bcrypt from "bcrypt";
 
 const router = Router();
 
-const JWT_KEY = process.env.JWT_KEY || 'jwt-key';
-const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret';
+const JWT_KEY = process.env.JWT_KEY || "jwt-key";
+const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret";
 
 router.post("/", async (req, res) => {
   try {
-    const basicToken = req.headers.authorization!;
-    const decoded = Buffer.from(basicToken.replace('Basic ', '') , "base64").toString("utf-8");
-    const [username, password] = decoded.split(":");
+    const { username, password } = req.body;
 
     const user = await User.findOne({ username });
     if (!user) {
@@ -24,15 +22,22 @@ router.post("/", async (req, res) => {
       res.status(401).json({ message: "Credenciales inválidas" });
     }
 
-    const token = jwt.sign({
-      key: JWT_KEY,
-      username: user!.username
-    }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      {
+        key: JWT_KEY,
+        username: user!.username,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     res.status(200).json({ message: "Inicio de sesión exitoso", token });
   } catch (error) {
-    res.status(500).json({ message: "Error en el inicio de sesión", error: JSON.stringify(error) });
+    res.status(500).json({
+      message: "Error en el inicio de sesión",
+      error: JSON.stringify(error),
+    });
   }
 });
 

@@ -9,14 +9,19 @@ router.post("/", getUserFromJWT, async (req, res) => {
   try {
     const result = await Function.deleteOne({
       username: req.params.user,
-      image,
+      image: image,
     });
     if (result.deletedCount === 0) {
       res.status(404).json({ message: "Registro no encontrado" });
     }
     res.status(200).json({ message: "Registro eliminado con éxito" });
   } catch (error) {
-    res.status(500).json({ message: "Error al eliminar el registro", error: JSON.stringify(error) });
+    res
+      .status(500)
+      .json({
+        message: "Error al eliminar el registro",
+        error: JSON.stringify(error),
+      });
   }
 });
 
