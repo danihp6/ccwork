@@ -15,11 +15,13 @@ router.post("/", async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) {
       res.status(401).json({ message: "Usuario no existe" });
+      return;
     }
 
     const match = await bcrypt.compare(password, user!.password);
     if (!match) {
       res.status(401).json({ message: "Credenciales inválidas" });
+      return;
     }
 
     const token = jwt.sign(

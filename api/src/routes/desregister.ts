@@ -13,6 +13,7 @@ router.post("/", getUserFromJWT, async (req, res) => {
     });
     if (result.deletedCount === 0) {
       res.status(404).json({ message: "Registro no encontrado" });
+      return;
     }
     res.status(200).json({ message: "Registro eliminado con éxito" });
   } catch (error) {
