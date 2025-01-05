@@ -68,22 +68,19 @@
 			],
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "test",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:9080/api/login",
 					"protocol": "http",
@@ -151,7 +148,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM1OTMwNTM1LCJleHAiOjE3MzU5MzQxMzV9.tSXsSQTRyvcGv_xkkteWdgeRvQwLb3JbLSL-MjjUD3Q",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM2MDk3NTU4LCJleHAiOjE3MzYxMDExNTh9.UxJ3X9ov9atkBOguIXRIhyLL4Q7NvmZwoJZlWWbF36Q",
 							"type": "string"
 						}
 					]
@@ -190,7 +187,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM1OTI4OTI5LCJleHAiOjE3MzU5MzI1Mjl9.vdVspyO0mtVLdPaYfSkmvftKcZ25aQAY25nYKdsoEWk",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM2MDk3NTU4LCJleHAiOjE3MzYxMDExNTh9.UxJ3X9ov9atkBOguIXRIhyLL4Q7NvmZwoJZlWWbF36Q",
 							"type": "string"
 						}
 					]
