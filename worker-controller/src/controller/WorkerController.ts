@@ -44,11 +44,21 @@ export class WorkerController {
                 });
             });
 
-            const container = await this.docker.createContainer({
-                Image: message.dockerImage,
-                Entrypoint: [message.parameter],
-                Tty: false,
-            });
+
+            var container: Docker.Container
+
+            if (message.parameter) {
+                container = await this.docker.createContainer({
+                    Image: message.dockerImage,
+                    Entrypoint: [message.parameter],
+                    Tty: false,
+                });
+            } else {
+                container = await this.docker.createContainer({
+                    Image: message.dockerImage,
+                    Tty: false,
+                });
+            }
 
             const stream = await container.attach({ stream: true, stdout: true, stderr: true });
             // save the stream content so we can return it later
@@ -62,19 +72,32 @@ export class WorkerController {
                 output = output.trim();
             });
 
-            await container.start();
-            console.log(`Container ${container.id} started`);
-            console.log(`Running image ${message.dockerImage}`);
+            try {
+                await container.start();
+                console.log(`Container ${container.id} started`);
+                console.log(`Running image ${message.dockerImage}`);
 
-
-            // Wait for the container to finish
-            await container.wait();
-            console.log(`Container ${container.id} finished`);
-
-            // Remove the container
-            await container.remove();
-            console.log(`Container ${container.id} removed`);
-
+                // Wait for the container to finish
+                await container.wait();
+                console.log(`Container ${container.id} finished`);
+            } catch (error) {
+                console.error(`Error running container: ${error}`);
+                throw error;
+            } finally {
+                // Ensure the container is removed
+                try {
+                    await container.remove();
+                    console.log(`Container ${container.id} removed`);
+                } catch (removeError) {
+                    console.error(`Failed to remove container: ${removeError}`);
+                }
+                try {
+                    await this.docker.getImage(message.dockerImage).remove()
+                    console.log(`Image ${message.dockerImage} removed`);
+                } catch (removeError) {
+                    console.error(`Failed to remove image: ${removeError}`);
+                }
+            }
             return output;
         } catch (error) {
             console.error('Error running container:', error);

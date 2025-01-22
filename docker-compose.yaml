@@ -13,7 +13,7 @@ services:
     container_name: api
     environment:
       - NATS_SERVER=nats://nats:4222
-      - SUBJECT=subject
+      - SUBJECT=executions
       - JWT_KEY=jwt-key
       - JWT_SECRET=jwt-secret
     ports:
@@ -33,15 +33,15 @@ services:
       - api
     networks:
       - app-network
-  worker:
+  worker-controller:
     build:
-      context: ./worker
-    container_name: worker
+      context: ./worker-controller
+    container_name: worker-controller
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - NATS_SERVER=nats://nats:4222
-      - SUBJECT=subject
+      - SUBJECT=executions
     depends_on:
       - nats
     networks:

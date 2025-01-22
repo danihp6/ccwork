@@ -1,5 +1,4 @@
 export interface RunQueueParameters {
-    requestId: string;
     dockerImage: string;
     parameter: string;
 }

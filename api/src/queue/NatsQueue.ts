@@ -74,19 +74,23 @@ export class NatsQueue implements Queue {
         }
     }
 
-    async publish(queueName: string, message: RunQueueParameters): Promise<void> {
+    async request(queueName: string, message: RunQueueParameters): Promise<ResponseQueueParameters> {
         if (!this.nc) {
             console.error('Not connected to NATS');
-            return;
+            return { result: 'error', status: 503 };
         }
 
         console.log(`Publishing message to ${queueName}: ${JSON.stringify(message)}`);
 
-        this.nc.request(queueName, JSON.stringify(message)).then((res) => {
-            console.log(`Received response: ${res}`);
-            return res.json();
-        }).catch((err) => {
-            console.error(`Error processing message: ${err.message}`);
-        });
-      }
+        try {
+            const res = await this.nc.request(queueName, this.sc.encode(JSON.stringify(message)), { timeout: 60000 });
+            const decodedMessage = this.sc.decode(res.data);
+            const queueMessage: ResponseQueueParameters = JSON.parse(decodedMessage);
+            console.log(`Received response: ${queueMessage}`);
+            return queueMessage;
+        } catch (err) {
+            console.error(`Error requesting message from ${queueName}: ${err instanceof Error ? err.message : err}`);
+            return { result: `Internal server error: ${err instanceof Error ? err.message : err}`, status: 500 };
+        }
+    }
 }

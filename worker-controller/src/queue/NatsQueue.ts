@@ -2,6 +2,7 @@ import { connect, NatsConnection, StringCodec, Subscription } from 'nats';
 
 import { Queue } from './Queue';
 import { ResponseQueueParameters, RunQueueParameters } from '../common/types';
+import WorkerController from '../controller/WorkerController';
 
 const NATS_SERVER = process.env.NATS_SERVER || 'nats://localhost:4222';
 
@@ -26,43 +27,48 @@ export class NatsQueue implements Queue {
         return this.nc !== undefined;
     }
 
-    async subscribe(queueName: string, callback: (message: RunQueueParameters) => void): Promise<void> {
+    async subscribe(queueName: string, workerController: WorkerController): Promise<void> {
         console.log(`Attempting to subscribe to ${queueName}`);
         
         if (!this.nc) {
-            console.error('Not connected to NATS');
-            return;
+            throw new Error('Not connected to NATS');
         }
 
         if (this.subscriptions.has(queueName)) {
-            console.log(`Already subscribed to ${queueName}`);
+            console.error(`Already subscribed to ${queueName}. Continuing...`);
             return;
         }
         
-        const sub = this.nc.subscribe(queueName);
-        this.subscriptions.set(queueName, sub);
-
-        (async () => {
-            for await (const msg of sub) {
-                try {
-                    const message = this.sc.decode(msg.data);
-                    const queueMessage: RunQueueParameters = JSON.parse(message);
-                    callback(queueMessage);
-                } catch (err) {
-                    if (err instanceof Error) {
-                        console.error(`Error processing message from ${queueName}: ${err.message}`);
-                    } else {
-                        console.error(`Error processing message from ${queueName}: ${err}`);
-                    }
+        const sub = this.nc.subscribe(queueName, {
+            callback: (err, msg) => {
+                if (err) {
+                    console.error(`Error receiving message: ${err.message}`);
+                    return;
                 }
+                
+                const message = this.sc.decode(msg.data);
+                const queueMessage: RunQueueParameters = JSON.parse(message);
+                workerController.process(queueMessage).then((output) => {
+                    msg.respond(this.sc.encode(JSON.stringify({
+                        result: output,
+                        status: 200,
+                    })));
+                }).catch((err) => {
+                    msg.respond(this.sc.encode(JSON.stringify({
+                        result: err.json.message || 'Internal server error',
+                        status: err.statusCode || 500,
+                    })));
+                    console.error('Error processing message:', err);
+                });
             }
-        })().catch((err) => {
-            console.error(`Error processing messages from ${queueName}: ${err.message}`);
         });
+
+        this.subscriptions.set(queueName, sub);
 
         console.log(`Subscribed to ${queueName}`);
     }
 
+    // Unused method
     async unsubscribe(queueName: string): Promise<void> {
         const sub = this.subscriptions.get(queueName);
         if (sub) {
@@ -74,6 +80,7 @@ export class NatsQueue implements Queue {
         }
     }
 
+    // Unused method
     async publish(queueName: string, message: ResponseQueueParameters): Promise<void> {
         if (!this.nc) {
             console.error('Not connected to NATS');
@@ -86,7 +93,7 @@ export class NatsQueue implements Queue {
             console.log(`Received response: ${res}`);
             return res.json();
         }).catch((err) => {
-            console.error(`Error processing message: ${err.message}`);
+            throw err;
         });
     }
 }
