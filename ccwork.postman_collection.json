@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "aee004be-016e-4a74-a679-535daa54f35d",
+		"_postman_id": "c4b2fc49-a573-4daf-b3ad-59f4becd3d87",
 		"name": "ccwork",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10479728"
+		"_exporter_id": "19180010"
 	},
 	"item": [
 		{
@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM1OTMwNTM1LCJleHAiOjE3MzU5MzQxMzV9.tSXsSQTRyvcGv_xkkteWdgeRvQwLb3JbLSL-MjjUD3Q",
+							"value": "{{JWT_token}}",
 							"type": "string"
 						}
 					]
@@ -29,7 +29,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"image\": \"ubuntu\",\r\n    \"parameter\": \"ls\"\r\n}",
+					"raw": "{\r\n    \"image\": \"hello-world\",\r\n    \"parameter\": \"\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,19 +100,7 @@
 			"name": "signup",
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "test",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [],
@@ -148,7 +136,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM2MDk3NTU4LCJleHAiOjE3MzYxMDExNTh9.UxJ3X9ov9atkBOguIXRIhyLL4Q7NvmZwoJZlWWbF36Q",
+							"value": "{{JWT_token}}",
 							"type": "string"
 						}
 					]
@@ -157,7 +145,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"image\": \"ubuntu\"\r\n}",
+					"raw": "{\r\n    \"image\": \"hello-world\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -187,7 +175,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJqd3Qta2V5IiwidXNlcm5hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM2MDk3NTU4LCJleHAiOjE3MzYxMDExNTh9.UxJ3X9ov9atkBOguIXRIhyLL4Q7NvmZwoJZlWWbF36Q",
+							"value": "{{JWT_token}}",
 							"type": "string"
 						}
 					]
@@ -196,7 +184,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"image\": \"ubuntu\"\r\n}",
+					"raw": "{\r\n    \"image\": \"hello-world\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
