@@ -12,9 +12,12 @@ docker-compose up --build
 
 ### documentation
 
-[Import postman collection](api/ccwork.postman_collection.json)
+[Import postman collection](ccwork.postman_collection.json)
 
 1. First signup to create user
 2. Login to get token
 3. Register a function
 4. Run a function
+
+### description
+[Show description](description.pdf)
